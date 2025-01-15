@@ -15,15 +15,17 @@ import {
 /** Mocks processor. */
 @injectable()
 export class Processor {
-    private processingOptions: ProcessingOptions;
+    private readonly processingOptions: ProcessingOptions;
     /**
      * Constructor.
      * @param {MocksProcessor} mocksProcessor The mocks processor.
      * @param {PresetsProcessor} presetsProcessor The presets processor.
      */
-    constructor(@inject('MocksProcessor') public mocksProcessor: MocksProcessor,
-                @inject('State') private state: State,
-                @inject('PresetsProcessor') public presetsProcessor: PresetsProcessor) {
+    constructor(
+@inject('MocksProcessor') public mocksProcessor: MocksProcessor,
+                @inject('State') private readonly state: State,
+                @inject('PresetsProcessor') public presetsProcessor: PresetsProcessor
+    ) {
     }
 
     /**
@@ -42,7 +44,10 @@ export class Processor {
         this.presetsProcessor.process(GeneratedProcessingOptions);
 
         if (opts.watch) {
-            chokidar.watch(`${opts.src}/${opts.watches?.mocks || opts.patterns.mocks}`, {
+            const mocks = opts.watches?.mocks || opts.patterns?.mocks;
+            chokidar.watch(Array.isArray(mocks)
+                ? mocks.map((m) => `${opts.src}/${m}`)
+                : `${opts.src}/${opts.watches?.mocks || opts.patterns.mocks}`, {
                 ignoreInitial: true,
                 usePolling: true,
                 interval: 2000

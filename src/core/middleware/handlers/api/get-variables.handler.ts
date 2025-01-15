@@ -18,12 +18,14 @@ export class GetVariablesHandler implements ApplicableHandler {
      * @param {Configuration} configuration The configuration.
      * @param {State} state The state.
      */
-    constructor(@inject('Configuration') private configuration: Configuration,
-                @inject('State') private state: State) {
+    constructor(
+@inject('Configuration') private readonly configuration: Configuration,
+                @inject('State') private readonly state: State
+    ) {
     }
 
     /** {@inheritDoc}. */
-    handle(request: http.IncomingMessage, response: http.ServerResponse, next: Function, params: { id: string }): void {
+    handle(_request: http.IncomingMessage, response: http.ServerResponse, next: Function, params: { id: string }): void {
         log('Get variables');
         const state = this.state.getMatchingState(params.id);
         const result: any = {

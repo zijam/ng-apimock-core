@@ -1,16 +1,25 @@
 import * as path from 'path';
 
+import * as http from '../middleware/http';
+
+export interface HTTPError extends Error {
+    status: typeof http.HttpStatusCode | number;
+    message: string;
+}
+
 export interface ProcessingOptions {
     src: string;
     patterns?: {
-        mocks?: string;
+        mocks?: string | string[];
         presets?: string;
+        ignore?: string | string[];
     };
     watches?: {
-        mocks?: string;
+        mocks?: string | string[];
         presets?: string;
     };
     watch?: boolean;
+    callbackOptions?: () => object | HTTPError
 }
 
 export const DefaultProcessingOptions = {

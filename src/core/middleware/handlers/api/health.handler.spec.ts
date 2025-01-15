@@ -58,7 +58,10 @@ describe('HealthHandler', () => {
                 expect(debugFn).toHaveBeenCalledTimes(1);
                 expect(debugFn).toHaveBeenCalledWith(expect.stringContaining('Health'));
                 expect(response.writeHead).toHaveBeenCalledWith(HttpStatusCode.OK, HttpHeaders.CONTENT_TYPE_APPLICATION_JSON);
-                expect(response.end).toHaveBeenCalledWith('{"status":"UP","components":{"livenessState":{"status":"UP"},"ping":{"status":"UP"},"readinessState":{"status":"UP"},"refreshScope":{"status":"UP"}},"groups":["liveness","readiness"]}');
+                expect(response.end).toHaveBeenCalledWith(
+                    '{"status":"UP","components":{"livenessState":{"status":"UP"},"ping":{"status":"UP"},'
+                    + '"readinessState":{"status":"UP"},"refreshScope":{"status":"UP"}},"groups":["liveness","readiness"]}'
+                );
             });
         });
         describe('/health/liveness', () => {

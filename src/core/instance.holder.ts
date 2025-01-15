@@ -16,9 +16,11 @@ export class InstanceHolder {
      * @param {FileLoader} fileLoader The fileLoader.
      * @param {State} state The state
      */
-    constructor(@inject('Configuration') private configuration: Configuration,
+    constructor(
+@inject('Configuration') private configuration: Configuration,
                 @inject('FileLoader') private fileLoader: FileLoader,
-                @inject('State') private state: State) {
+                @inject('State') private state: State
+    ) {
     }
 
     /** Gets the information containing everything related to this running instance. */

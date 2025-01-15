@@ -14,15 +14,17 @@ export const log = debug('ng-apimock:handler-update-mocks');
 /**  Update mocks handler. */
 @injectable()
 export class UpdateMocksHandler implements ApplicableHandler {
-    private PASS_THROUGH = 'passThrough';
+    private readonly PASS_THROUGH = 'passThrough';
 
     /**
      * Constructor.
      * @param {Configuration} configuration The configuration.
      * @param {State} state The state.
      */
-    constructor(@inject('Configuration') private configuration: Configuration,
-                @inject('State') private state: State) {
+    constructor(
+        @inject('Configuration') private readonly configuration: Configuration,
+                @inject('State') private readonly state: State
+    ) {
     }
 
     /** {@inheritDoc}. */

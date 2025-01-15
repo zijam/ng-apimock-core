@@ -101,7 +101,7 @@ describe('CreateMocksHandler', () => {
             state.getProcessingOptions.mockReturnValue({
                 src: 'the/mocks/path',
                 patterns: {
-                    mocks: '**/*.somemock.json'
+                    mocks: ['**/*.somemock.json']
                 }
             });
             mockPostData = {
@@ -120,7 +120,17 @@ describe('CreateMocksHandler', () => {
         });
         it('shoud save the mock in the mocks folder', () => {
             handler.saveMock(mockPostData);
-            expect(outputJSONSync).toHaveBeenCalledWith(path.join(process.cwd(), '.ngapimock', 'generated', 'newname.mock.json'), mockPostData, { spaces: 2 });
+            expect(outputJSONSync)
+                .toHaveBeenCalledWith(
+                    path.join(
+                        process.cwd(),
+                        '.ngapimock',
+                        'generated',
+                        'newname.mock.json'
+                    ),
+                    mockPostData,
+                    { spaces: 2 }
+                );
         });
         it('should add a default response if no reponse is posted and save the mock', () => {
             mockPostData.responses = {};
@@ -135,9 +145,11 @@ describe('CreateMocksHandler', () => {
                     }
                 }
             };
-            expect(outputJSONSync).toHaveBeenCalledWith(path.join(process.cwd(), '.ngapimock', 'generated', 'newname.mock.json'),
+            expect(outputJSONSync).toHaveBeenCalledWith(
+                path.join(process.cwd(), '.ngapimock', 'generated', 'newname.mock.json'),
                 expectedPostData,
-                { spaces: 2 });
+                { spaces: 2 }
+            );
         });
     });
 

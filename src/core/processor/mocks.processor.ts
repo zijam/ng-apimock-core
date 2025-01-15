@@ -16,9 +16,9 @@ export const log = debug('ng-apimock:processor-mock');
 /** Mocks processor. */
 @injectable()
 export class MocksProcessor {
-    private DEFAULT_DELAY = 0;
-    private DEFAULT_ECHO = false;
-    private PASS_THROUGH = 'passThrough';
+    private readonly DEFAULT_DELAY = 0;
+    private readonly DEFAULT_ECHO = false;
+    private readonly PASS_THROUGH = 'passThrough';
 
     /**
      * Constructor.
@@ -46,11 +46,12 @@ export class MocksProcessor {
         }
 
         let counter = 0;
-        const pattern = options.patterns.mocks;
+        const { mocks, ignore } = options.patterns;
 
-        glob.sync(pattern, {
+        glob.sync(mocks, {
             cwd: options.src,
-            root: '/'
+            root: '/',
+            ignore
         }).forEach((file) => {
             const mockPath = path.join(options.src, file);
             const mock = this.fileLoader.loadFile(mockPath);

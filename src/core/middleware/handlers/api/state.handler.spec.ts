@@ -50,7 +50,9 @@ describe('StateHandler', () => {
             expect(debugFn).toHaveBeenCalledTimes(1);
             expect(debugFn).toHaveBeenCalledWith(expect.stringContaining('State'));
             expect(response.writeHead).toHaveBeenCalledWith(HttpStatusCode.OK, HttpHeaders.CONTENT_TYPE_APPLICATION_JSON);
-            expect(response.end).toHaveBeenCalledWith('{"global":{"_mocks":{},"_variables":{},"_recordings":{},"record":false},"sessions":[]}');
+            expect(response.end).toHaveBeenCalledWith(
+                '{"global":{"_mocks":{},"_variables":{},"_recordings":{},"record":false},"sessions":[]}'
+            );
         });
     });
 

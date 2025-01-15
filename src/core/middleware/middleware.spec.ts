@@ -172,8 +172,10 @@ describe('Middleware', () => {
 
             it('gets the apimock id', () => expect(getApimockIdFn).toHaveBeenCalled());
 
-            it('gets the matching applicable handler',
-                () => expect(getMatchingApplicableHandlerFn).toHaveBeenCalledWith(request, { x: 'x' }));
+            it(
+                'gets the matching applicable handler',
+                () => expect(getMatchingApplicableHandlerFn).toHaveBeenCalledWith(request, { x: 'x' })
+            );
 
             it('calls the handler.handle', () => expect(applicableHandlerHandleFn).toHaveBeenCalledWith(request, response, nextFn, {
                 id: 'apimockId', body: { x: 'x' }
@@ -211,14 +213,17 @@ describe('Middleware', () => {
 
                 it('gets the apimock id', () => expect(getApimockIdFn).toHaveBeenCalled());
 
-                it('gets the matching applicable handler',
-                    () => expect(getMatchingApplicableHandlerFn).toHaveBeenCalledWith(request, { x: 'x' }));
+                it(
+                    'gets the matching applicable handler',
+                    () => expect(getMatchingApplicableHandlerFn).toHaveBeenCalledWith(request, { x: 'x' })
+                );
 
                 it('gets the matching mock', () => expect(state.getMatchingMock).toHaveBeenCalledWith('/base-path', HttpMethods.GET, {
                     some: 'header'
                 }, { x: 'x' }));
 
-                it('calls the echo request handler',
+                it(
+                    'calls the echo request handler',
                     () => expect(echoRequestHandler.handle).toHaveBeenCalledWith(request, response, nextFn, {
                         id: 'apimockId',
                         mock: {
@@ -228,7 +233,8 @@ describe('Middleware', () => {
                             responses: {}
                         },
                         body: { x: 'x' }
-                    }));
+                    })
+                );
             });
 
             describe('recording is enabled', () => {
@@ -277,7 +283,8 @@ describe('Middleware', () => {
                         textBodyParser.mock.calls[0][2]();
                     });
 
-                    it('calls the record response handler',
+                    it(
+                        'calls the record response handler',
                         () => expect(recordResponseHandler.handle).toHaveBeenCalledWith(request, response, nextFn, {
                             id: 'apimockId',
                             mock: {
@@ -287,7 +294,8 @@ describe('Middleware', () => {
                                 responses: {}
                             },
                             body: { x: 'x' }
-                        }));
+                        })
+                    );
                 });
             });
 
@@ -320,7 +328,8 @@ describe('Middleware', () => {
                     textBodyParser.mock.calls[0][2]();
                 });
 
-                it('calls the mock request handler', () => expect(mockRequestHandler.handle).toHaveBeenCalledWith(request,
+                it('calls the mock request handler', () => expect(mockRequestHandler.handle).toHaveBeenCalledWith(
+                    request,
                     response,
                     nextFn,
                     {
@@ -331,7 +340,8 @@ describe('Middleware', () => {
                             request: { url: '/base-path', method: HttpMethods.GET },
                             responses: {}
                         }
-                    }));
+                    }
+                ));
             });
         });
 
@@ -363,8 +373,10 @@ describe('Middleware', () => {
             getVariablesHandler.isApplicable.mockReturnValue(true);
         });
 
-        it('finds the applicable handler',
-            () => expect(middleware.getMatchingApplicableHandler(request, { x: 'x' })).toEqual(getVariablesHandler));
+        it(
+            'finds the applicable handler',
+            () => expect(middleware.getMatchingApplicableHandler(request, { x: 'x' })).toEqual(getVariablesHandler)
+        );
     });
 
     describe('getApimockId', () => {
@@ -379,10 +391,12 @@ describe('Middleware', () => {
         describe('configuration use cookie', () => {
             beforeEach(() => {
                 middleware['configuration'].middleware.useHeader = false;
-                middleware.getApimockId({ some: 'header' });
+                middleware.getApimockId({ some: 'header', cookie: 'some=header' });
             });
 
-            it('returns the apimockId from the cookie', () => expect(getApimockIdFromCookieFn).toHaveBeenCalledWith({ some: 'header' }));
+            it('returns the apimockId from the cookie', () => expect(
+                getApimockIdFromCookieFn
+            ).toHaveBeenCalledWith({ some: 'header', cookie: 'some=header' }));
         });
 
         describe('configuration use header', () => {
@@ -421,8 +435,10 @@ describe('Middleware', () => {
             middleware['configuration'].middleware.identifier = 'my-identifier';
         });
         describe('apimockId cookie is present', () => {
-            it('returns the apimockId',
-                () => expect(middleware.getApimockIdFromCookie({ cookie: 'a=a;my-identifier=123;c=c' })).toBe('123'));
+            it(
+                'returns the apimockId',
+                () => expect(middleware.getApimockIdFromCookie({ cookie: 'a=a;my-identifier=123;c=c' })).toBe('123')
+            );
         });
 
         describe('apimockId cookie is not present', () => {

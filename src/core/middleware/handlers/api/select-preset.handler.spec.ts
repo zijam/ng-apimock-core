@@ -224,9 +224,16 @@ describe('SelectPresetHandler', () => {
 
             it('throws an error when the scenario does not match', () => {
                 expect(debugFn).toHaveBeenCalledTimes(1);
-                expect(debugFn).toHaveBeenCalledWith(expect.stringContaining('No scenario matching [\'no-match\'] found for mock with name [\'another\']'));
-                expect(response.writeHead).toHaveBeenCalledWith(HttpStatusCode.INTERNAL_SERVER_ERROR, HttpHeaders.CONTENT_TYPE_APPLICATION_JSON);
-                expect(response.end).toHaveBeenCalledWith(JSON.stringify({ message: 'No scenario matching [\'no-match\'] found for mock with name [\'another\']' }));
+                expect(debugFn).toHaveBeenCalledWith(
+                    expect.stringContaining('No scenario matching [\'no-match\'] found for mock with name [\'another\']')
+                );
+                expect(response.writeHead).toHaveBeenCalledWith(
+                    HttpStatusCode.INTERNAL_SERVER_ERROR,
+                    HttpHeaders.CONTENT_TYPE_APPLICATION_JSON
+                );
+                expect(response.end).toHaveBeenCalledWith(
+                    JSON.stringify({ message: 'No scenario matching [\'no-match\'] found for mock with name [\'another\']' })
+                );
             });
         });
 
@@ -245,9 +252,16 @@ describe('SelectPresetHandler', () => {
 
             it('throws an error when an unknown mock is in the preset', () => {
                 expect(debugFn).toHaveBeenCalledTimes(1);
-                expect(debugFn).toHaveBeenCalledWith(expect.stringContaining('Preset [\'unknown-mock\'] references unknown mock with name [\'invalid\']'));
-                expect(response.writeHead).toHaveBeenCalledWith(HttpStatusCode.INTERNAL_SERVER_ERROR, HttpHeaders.CONTENT_TYPE_APPLICATION_JSON);
-                expect(response.end).toHaveBeenCalledWith(JSON.stringify({ message: 'Preset [\'unknown-mock\'] references unknown mock with name [\'invalid\']' }));
+                expect(debugFn).toHaveBeenCalledWith(
+                    expect.stringContaining('Preset [\'unknown-mock\'] references unknown mock with name [\'invalid\']')
+                );
+                expect(response.writeHead).toHaveBeenCalledWith(
+                    HttpStatusCode.INTERNAL_SERVER_ERROR,
+                    HttpHeaders.CONTENT_TYPE_APPLICATION_JSON
+                );
+                expect(response.end).toHaveBeenCalledWith(
+                    JSON.stringify({ message: 'Preset [\'unknown-mock\'] references unknown mock with name [\'invalid\']' })
+                );
             });
         });
 

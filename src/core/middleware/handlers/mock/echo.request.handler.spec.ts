@@ -56,7 +56,9 @@ describe('EchoRequestHandler', () => {
                 });
 
                 expect(state.getEcho).toHaveBeenCalledWith('some', 'apimockId');
-                expect(consoleLogFn).toHaveBeenCalledWith(`${HttpMethods.GET} request made on '/some/url' with body: '${JSON.stringify({ x: 'x' })}'`);
+                expect(consoleLogFn).toHaveBeenCalledWith(
+                    `${HttpMethods.GET} request made on '/some/url' with body: '${JSON.stringify({ x: 'x' })}'`
+                );
             });
         });
 

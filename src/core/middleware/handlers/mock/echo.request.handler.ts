@@ -17,12 +17,18 @@ export class EchoRequestHandler implements Handler {
     }
 
     /** {@inheritDoc}. */
-    handle(request: http.IncomingMessage, response: http.ServerResponse, next: Function,
-        params: { id: string, mock: Mock, body: any }): void {
+    handle(
+        request: http.IncomingMessage,
+        response: http.ServerResponse,
+        next: Function,
+        params: { id: string, mock: Mock, body: any }
+    ): void {
         const echo: boolean = this.state.getEcho(params.mock.name, params.id);
 
         if (echo) {
-            console.log(`${params.mock.request.method} request made on '${params.mock.request.url}' with body: '${JSON.stringify(params.body)}'`);
+            console.log(
+                `${params.mock.request.method} request made on '${params.mock.request.url}' with body: '${JSON.stringify(params.body)}'`
+            );
         }
     }
 }

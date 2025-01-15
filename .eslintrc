@@ -25,7 +25,6 @@
     "comma-dangle": "off",
     "dot-notation": "off",
     "global-require": "off",
-    "function-paren-newline": ["error", "never"],
     "import/extensions": "off",
     "indent": [
       "error",

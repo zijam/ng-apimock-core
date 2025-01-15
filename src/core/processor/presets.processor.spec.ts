@@ -34,13 +34,10 @@ describe('PresetsProcessor', () => {
 
     describe('process', () => {
         let debugFn: jest.SpyInstance;
-        let doneFn: jest.Mock;
         let loadFileFn: jest.Mock;
         let globSyncFn: jest.Mock;
 
         beforeEach(() => {
-            doneFn = jest.fn();
-
             debug.enable('ng-apimock:processor-preset');
             debugFn = jest.spyOn(process.stderr, 'write');
             loadFileFn = fileLoader.loadFile as jest.Mock;
@@ -50,24 +47,31 @@ describe('PresetsProcessor', () => {
             globSyncFn.mockReturnValue([
                 'preset/happy.preset.json',
                 'preset/unhappy.preset.json',
-                'preset/duplicate.preset.json']);
+                'preset/duplicate.preset.json',
+            ]);
             loadFileFn.mockReturnValueOnce({
                 name: 'happy.preset',
                 mocks: {
                     some: { scenario: 'success', delay: 2000, echo: true },
-                    another: { scenario: 'success' }
+                    another: { scenario: 'success' },
                 },
-                variables: { today: 'some date' }
+                variables: { today: 'some date' },
             });
             loadFileFn.mockReturnValueOnce({
                 name: 'unhappy.preset',
-                mocks: { some: { scenario: 'failure' }, another: { scenario: 'error' } },
-                variables: { today: 'some date' }
+                mocks: {
+                    some: { scenario: 'failure' },
+                    another: { scenario: 'error' },
+                },
+                variables: { today: 'some date' },
             });
             loadFileFn.mockReturnValue({
                 name: 'happy.preset',
-                mocks: { some: { scenario: 'success' }, another: { scenario: 'success' } },
-                variables: { today: 'some date' }
+                mocks: {
+                    some: { scenario: 'success' },
+                    another: { scenario: 'success' },
+                },
+                variables: { today: 'some date' },
             });
         });
 
@@ -82,7 +86,8 @@ describe('PresetsProcessor', () => {
 
             it('processes each mock', () => {
                 expect(globSyncFn).toHaveBeenCalledWith('**/*.preset.json', {
-                    cwd: 'src', root: '/'
+                    cwd: 'src',
+                    root: '/',
                 });
                 expect(loadFileFn).toHaveBeenCalledWith(path.join('src', 'preset/happy.preset.json'));
                 expect(loadFileFn).toHaveBeenCalledWith(path.join('src', 'preset/unhappy.preset.json'));
@@ -91,7 +96,9 @@ describe('PresetsProcessor', () => {
 
             it('processes unique presets', () => {
                 expect(debugFn).toHaveBeenCalledTimes(2);
-                expect(debugFn).toHaveBeenCalledWith(expect.stringContaining('Preset with identifier \'happy.preset\' already exists. Overwriting existing preset.'));
+                expect(debugFn).toHaveBeenCalledWith(
+                    expect.stringContaining("Preset with identifier 'happy.preset' already exists. Overwriting existing preset.")
+                );
                 expect(debugFn).toHaveBeenCalledWith(expect.stringContaining('Processed 2 unique presets.'));
             });
         });
@@ -99,11 +106,15 @@ describe('PresetsProcessor', () => {
         describe('with full processing options', () => {
             beforeEach(() => {
                 globSyncFn.mockReturnValue([]);
-                processor.process({ src: 'src', patterns: { presets: '**/*.mypreset.json' } });
+                processor.process({
+                    src: 'src',
+                    patterns: { presets: '**/*.mypreset.json' },
+                });
             });
             it('processes each preset', () => {
                 expect(globSyncFn).toHaveBeenCalledWith('**/*.mypreset.json', {
-                    cwd: 'src', root: '/'
+                    cwd: 'src',
+                    root: '/',
                 });
             });
         });
@@ -114,15 +125,18 @@ describe('PresetsProcessor', () => {
                 processor.process({
                     src: 'src',
                     patterns: { presets: '**/*.mypreset.json' },
-                    watches: { presets: '**/*' }
+                    watches: { presets: '**/*' },
                 });
             });
             it('processes each preset watch and preset', () => {
                 expect(globSyncFn).toHaveBeenCalledWith('**/*', {
-                    cwd: 'src', root: '/', nodir: true
+                    cwd: 'src',
+                    root: '/',
+                    nodir: true,
                 });
                 expect(globSyncFn).toHaveBeenCalledWith('**/*.mypreset.json', {
-                    cwd: 'src', root: '/'
+                    cwd: 'src',
+                    root: '/',
                 });
             });
         });

@@ -36,13 +36,10 @@ describe('MocksProcessor', () => {
 
     describe('process', () => {
         let debugFn: jest.SpyInstance;
-        let doneFn: jest.Mock;
         let loadFileFn: jest.Mock;
         let globSyncFn: jest.Mock;
 
         beforeEach(() => {
-            doneFn = jest.fn();
-
             debug.enable('ng-apimock:processor-mock');
             debugFn = jest.spyOn(process.stderr, 'write');
             loadFileFn = fileLoader.loadFile as jest.Mock;
@@ -180,7 +177,9 @@ describe('MocksProcessor', () => {
 
             it('processes unique mocks', () => {
                 expect(debugFn).toHaveBeenCalledTimes(2);
-                expect(debugFn).toHaveBeenCalledWith(expect.stringContaining('Mock with identifier \'minimal-json-request\' already exists. Overwriting existing mock.'));
+                expect(debugFn).toHaveBeenCalledWith(
+                    expect.stringContaining('Mock with identifier \'minimal-json-request\' already exists. Overwriting existing mock.')
+                );
                 expect(debugFn).toHaveBeenCalledWith(expect.stringContaining('Processed 3 unique mocks.'));
             });
         });

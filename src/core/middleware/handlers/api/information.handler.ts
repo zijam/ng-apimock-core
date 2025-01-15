@@ -18,12 +18,14 @@ export class InformationHandler implements ApplicableHandler {
      * @param {Configuration} configuration The configuration.
      * @param {InstanceHolder} instanceHolder The instance holder
      */
-    constructor(@inject('Configuration') private configuration: Configuration,
-                @inject('InstanceHolder') private instanceHolder: InstanceHolder) {
+    constructor(
+@inject('Configuration') private readonly configuration: Configuration,
+                @inject('InstanceHolder') private readonly instanceHolder: InstanceHolder
+    ) {
     }
 
     /** {@inheritDoc}. */
-    handle(request: http.IncomingMessage, response: http.ServerResponse, next: Function, params: { id: string }): void {
+    handle(_request: http.IncomingMessage, response: http.ServerResponse, next: Function, _params: { id: string }): void {
         log('Information');
 
         response.writeHead(HttpStatusCode.OK, HttpHeaders.CONTENT_TYPE_APPLICATION_JSON);

@@ -7,6 +7,7 @@ import { createSpyObj } from 'jest-createspyobj';
 
 import { Mock } from '../../../mock/mock';
 import { MockResponse } from '../../../mock/mock.response';
+import { HTTPError } from '../../../processor/processing.options';
 import { IState } from '../../../state/Istate';
 import { MockState } from '../../../state/mock.state';
 import { State } from '../../../state/state';
@@ -89,14 +90,21 @@ describe('MockRequestHandler', () => {
                     expect(state.getResponse).toHaveBeenCalledWith('some', 'apimockId');
                     expect(state.getDelay).toHaveBeenCalledWith('some', 'apimockId');
                     expect(getJsonCallbackNameFn).toHaveBeenCalledWith(request);
-                    expect(getChunkFn).toHaveBeenCalledWith(mockResponse, params, false);
+                    expect(getChunkFn).toHaveBeenCalledWith(mockResponse, request, params, false);
                 });
 
                 it('sends the respond after the delay time has passed', () => {
                     mockRequestHandler.handle(request as any, response as any, nextFn, params);
 
                     jest.runAllTimers();
-                    expect(respondFn).toHaveBeenCalledWith(params, { mocks: [] }, response, 200, { 'Content-Type': 'application/json' }, 'chunk');
+                    expect(respondFn).toHaveBeenCalledWith(
+                        params,
+                        { mocks: [] },
+                        response,
+                        200,
+                        { 'Content-Type': 'application/json' },
+                        'chunk'
+                    );
                 });
 
                 it('throws an error when the something goes wrong', () => {
@@ -109,9 +117,12 @@ describe('MockRequestHandler', () => {
                     expect(state.getResponse).toHaveBeenCalledWith('some', 'apimockId');
                     expect(state.getDelay).toHaveBeenCalledWith('some', 'apimockId');
                     expect(getJsonCallbackNameFn).toHaveBeenCalledWith(request);
-                    expect(getChunkFn).toHaveBeenCalledWith(mockResponse, params, false);
+                    expect(getChunkFn).toHaveBeenCalledWith(mockResponse, request, params, false);
 
-                    expect(response.writeHead).toHaveBeenCalledWith(HttpStatusCode.INTERNAL_SERVER_ERROR, HttpHeaders.CONTENT_TYPE_APPLICATION_JSON);
+                    expect(response.writeHead).toHaveBeenCalledWith(
+                        HttpStatusCode.INTERNAL_SERVER_ERROR,
+                        HttpHeaders.CONTENT_TYPE_APPLICATION_JSON
+                    );
                     expect(response.end).toHaveBeenCalledWith(JSON.stringify({ message: 'Error' }));
                     expect(response.writeHead).toHaveBeenCalledTimes(1);
                     expect(response.end).toHaveBeenCalledTimes(1);
@@ -150,14 +161,21 @@ describe('MockRequestHandler', () => {
                     expect(state.getResponse).toHaveBeenCalledWith('some', 'apimockId');
                     expect(state.getDelay).not.toHaveBeenCalledWith('some', 'apimockId');
                     expect(getJsonCallbackNameFn).toHaveBeenCalledWith(request);
-                    expect(getChunkFn).toHaveBeenCalledWith(mockResponse, params, false);
+                    expect(getChunkFn).toHaveBeenCalledWith(mockResponse, request, params, false);
                 });
 
                 it('sends the respond after the delay time has passed', () => {
                     mockRequestHandler.handle(request as any, response as any, nextFn, params);
 
                     jest.runAllTimers();
-                    expect(respondFn).toHaveBeenCalledWith(params, { mocks: [] }, response, 200, { 'Content-Type': 'application/json' }, 'chunk');
+                    expect(respondFn).toHaveBeenCalledWith(
+                        params,
+                        { mocks: [] },
+                        response,
+                        200,
+                        { 'Content-Type': 'application/json' },
+                        'chunk'
+                    );
                 });
 
                 it('throws an error when the something goes wrong', () => {
@@ -171,9 +189,12 @@ describe('MockRequestHandler', () => {
                     expect(state.getResponse).toHaveBeenCalledWith('some', 'apimockId');
                     expect(state.getDelay).not.toHaveBeenCalledWith('some', 'apimockId');
                     expect(getJsonCallbackNameFn).toHaveBeenCalledWith(request);
-                    expect(getChunkFn).toHaveBeenCalledWith(mockResponse, params, false);
+                    expect(getChunkFn).toHaveBeenCalledWith(mockResponse, request, params, false);
 
-                    expect(response.writeHead).toHaveBeenCalledWith(HttpStatusCode.INTERNAL_SERVER_ERROR, HttpHeaders.CONTENT_TYPE_APPLICATION_JSON);
+                    expect(response.writeHead).toHaveBeenCalledWith(
+                        HttpStatusCode.INTERNAL_SERVER_ERROR,
+                        HttpHeaders.CONTENT_TYPE_APPLICATION_JSON
+                    );
                     expect(response.end).toHaveBeenCalledWith(JSON.stringify({ message: 'Error' }));
                     expect(response.writeHead).toHaveBeenCalledTimes(1);
                     expect(response.end).toHaveBeenCalledTimes(1);
@@ -199,6 +220,51 @@ describe('MockRequestHandler', () => {
                 expect(state.getResponse).toHaveBeenCalledWith('some', 'apimockId');
                 expect(state.getVariables).not.toHaveBeenCalled();
                 expect(nextFn).toHaveBeenCalled();
+            });
+        });
+
+        describe('callback', () => {
+            let mockResponse: MockResponse;
+            let params: any;
+
+            beforeEach(() => {
+                mockResponse = {
+                    data: 'data',
+                    headers: { 'Content-Type': 'application/json' },
+                    status: 200,
+                    then: { mocks: [] }
+                };
+                params = {
+                    id: 'apimockId',
+                    mock: {
+                        path: 'path/to',
+                        name: 'some',
+                        request: { method: HttpMethods.GET, url: '/some/url' }
+                    } as Mock
+                };
+
+                state.getResponse.mockReturnValue(mockResponse);
+                state.getDelay.mockReturnValue(1000);
+                getJsonCallbackNameFn.mockReturnValue(false);
+            });
+
+            it('throws an error', () => {
+                const errorResp = { status: 401, message: 'Unauthorized' } as HTTPError;
+                getChunkFn.mockImplementation(() => {
+                    throw errorResp;
+                });
+
+                mockRequestHandler.handle(request as any, response as any, nextFn, params);
+
+                jest.runAllTimers();
+
+                expect(response.writeHead).toHaveBeenCalledWith(
+                    errorResp.status,
+                    HttpHeaders.CONTENT_TYPE_APPLICATION_JSON
+                );
+                expect(response.end).toHaveBeenCalledWith(JSON.stringify(errorResp));
+                expect(response.writeHead).toHaveBeenCalledTimes(1);
+                expect(response.end).toHaveBeenCalledTimes(1);
             });
         });
     });
@@ -229,18 +295,18 @@ describe('MockRequestHandler', () => {
                 });
 
                 it('reads the binary content', () => {
-                    (mockRequestHandler as any).getChunk(mockResponse, params, false);
+                    (mockRequestHandler as any).getChunk(mockResponse, {}, params, false);
 
                     expect(fsReadFileSyncFn).toHaveBeenCalledWith(path.join('/path/to', 'some.json'));
                 });
 
                 it('returns the response', () => {
-                    const chunk = (mockRequestHandler as any).getChunk(mockResponse, params, false);
+                    const chunk = (mockRequestHandler as any).getChunk(mockResponse, {}, params, false);
                     expect(chunk).toEqual('interpolated binary response data');
                 });
 
                 it('returns the wrapped body in a json callback', () => {
-                    const chunk = (mockRequestHandler as any).getChunk(mockResponse, params, 'callbackName');
+                    const chunk = (mockRequestHandler as any).getChunk(mockResponse, {}, params, 'callbackName');
                     expect(chunk).toEqual('callbackName(interpolated binary response data)');
                 });
             });
@@ -263,18 +329,18 @@ describe('MockRequestHandler', () => {
                 });
 
                 it('reads the binary content', () => {
-                    (mockRequestHandler as any).getChunk(mockResponse, params, false);
+                    (mockRequestHandler as any).getChunk(mockResponse, {}, params, false);
 
                     expect(fsReadFileSyncFn).toHaveBeenCalledWith(path.join('/path/to', 'some.pdf'));
                 });
 
                 it('returns the response', () => {
-                    const chunk = (mockRequestHandler as any).getChunk(mockResponse, params, false);
+                    const chunk = (mockRequestHandler as any).getChunk(mockResponse, {}, params, false);
                     expect(chunk).toEqual('binary content');
                 });
 
                 it('returns the wrapped body in a json callback', () => {
-                    const chunk = (mockRequestHandler as any).getChunk(mockResponse, params, 'callbackName');
+                    const chunk = (mockRequestHandler as any).getChunk(mockResponse, {}, params, 'callbackName');
                     expect(chunk).toEqual('callbackName(binary content)');
                 });
             });
@@ -301,15 +367,69 @@ describe('MockRequestHandler', () => {
             });
 
             it('interpolates the data and returns it as response', () => {
-                const chunk = (mockRequestHandler as any).getChunk(mockResponse, params, false);
+                const chunk = (mockRequestHandler as any).getChunk(mockResponse, {}, params, false);
 
                 expect(interpolateResponseDataFn).toHaveBeenCalledWith(JSON.stringify(mockResponse.data), variables);
                 expect(chunk).toEqual('interpolated response data');
             });
 
             it('returns the wrapped body in a json callback', () => {
-                const chunk = (mockRequestHandler as any).getChunk(mockResponse, params, 'callbackName');
+                const chunk = (mockRequestHandler as any).getChunk(mockResponse, {}, params, 'callbackName');
                 expect(chunk).toEqual('callbackName(interpolated response data)');
+            });
+        });
+
+        class NoErrorThrownError extends Error {}
+
+        const getError = async <TError>(call: () => unknown): Promise<TError> => {
+            try {
+                await call();
+
+                throw new NoErrorThrownError();
+            } catch (error: unknown) {
+                return error as TError;
+            }
+        };
+
+        describe('callback', () => {
+            let interpolateCallbackFn: jest.SpyInstance;
+            let mockResponse: MockResponse;
+            let params: any;
+            let variables: any;
+            const interpolatedText: object = { text: 'interpolated binary response data' };
+
+            beforeEach(() => {
+                mockResponse = {
+                    status: HttpStatusCode.OK,
+                    headers: HttpHeaders.CONTENT_TYPE_APPLICATION_JSON,
+                    callback: jest.fn(),
+                };
+                params = { mock: { path: '/path/to' } };
+                variables = { x: 'mock' };
+                state.getVariables.mockReturnValue(variables);
+                interpolateCallbackFn = jest.spyOn(mockResponse, 'callback');
+            });
+
+            it('returns the response', () => {
+                interpolateCallbackFn.mockReturnValue(interpolatedText);
+                state.getCallbackOptions.mockReturnValue({});
+                const chunk = (mockRequestHandler as any).getChunk(mockResponse, {}, params, false);
+
+                expect(chunk).toEqual(JSON.stringify(interpolatedText));
+                expect(interpolateCallbackFn).toHaveBeenCalledWith({}, {});
+            });
+
+            it('returns HTTPError', async () => {
+                const error = {
+                    status: 401,
+                    message: 'Unauthorized'
+                } as HTTPError;
+                interpolateCallbackFn.mockReturnValue(error);
+
+                const errorResp = await getError(async () => (mockRequestHandler as any)
+                    .getChunk(mockResponse, {}, params, false));
+
+                expect(errorResp).toEqual(error);
             });
         });
     });
@@ -324,7 +444,8 @@ describe('MockRequestHandler', () => {
 
         describe('query param callback', () => {
             it('returns the callback name', () => {
-                const jsonCallbackName = (mockRequestHandler as any).getJsonCallbackName({ url: 'some/url/?callback=callme' } as http.IncomingMessage);
+                const jsonCallbackName = (mockRequestHandler as any)
+                    .getJsonCallbackName({ url: 'some/url/?callback=callme' } as http.IncomingMessage);
                 expect(jsonCallbackName).toBe('callme');
             });
         });
@@ -380,7 +501,8 @@ describe('MockRequestHandler', () => {
 
         describe('no criteria', () => {
             beforeEach(() => {
-                (mockRequestHandler as any).handleThenCriteria({ mocks: [{ scenario: 'some scenario' }] }, matchingMockState, matchingState);
+                (mockRequestHandler as any)
+                    .handleThenCriteria({ mocks: [{ scenario: 'some scenario' }] }, matchingMockState, matchingState);
             });
 
             it('selects the scenario', () => {
@@ -535,9 +657,11 @@ describe('MockRequestHandler', () => {
             });
 
             it('handles the then criteria', () => {
-                expect(handleThenCriteriaFn).toHaveBeenCalledWith({ mocks: [] },
+                expect(handleThenCriteriaFn).toHaveBeenCalledWith(
+                    { mocks: [] },
                     { scenario: 'the default', counter: 2 },
-                    { mocks: { some: { scenario: 'the default', counter: 2 } } });
+                    { mocks: { some: { scenario: 'the default', counter: 2 } } }
+                );
             });
         });
     });

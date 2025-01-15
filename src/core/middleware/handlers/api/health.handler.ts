@@ -16,11 +16,11 @@ export class HealthHandler implements ApplicableHandler {
      * Constructor.
      * @param {Configuration} configuration The configuration.
      */
-    constructor(@inject('Configuration') private configuration: Configuration) {
+    constructor(@inject('Configuration') private readonly configuration: Configuration) {
     }
 
     /** {@inheritDoc}. */
-    handle(request: http.IncomingMessage, response: http.ServerResponse, next: Function, params: { id: string }): void {
+    handle(request: http.IncomingMessage, response: http.ServerResponse, next: Function, _params: { id: string }): void {
         log('Health');
 
         const result: any = request.url.endsWith('health/liveness') || request.url.endsWith('health/readiness')

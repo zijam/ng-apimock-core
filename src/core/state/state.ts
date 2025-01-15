@@ -7,7 +7,7 @@ import { injectable } from 'inversify';
 import { Mock } from '../mock/mock';
 import { MockResponse } from '../mock/mock.response';
 import { Preset } from '../preset/preset';
-import { ProcessingOptions } from '../processor/processing.options';
+import { HTTPError, ProcessingOptions } from '../processor/processing.options';
 
 import { IState } from './Istate';
 import { GlobalState } from './global.state';
@@ -31,6 +31,7 @@ export class State {
 
     readonly _sessions: SessionState[];
     private _processingOptions: ProcessingOptions;
+    private _callback: object | HTTPError;
     /** Constructor. */
     constructor() {
         this._mocks = [];
@@ -203,7 +204,7 @@ export class State {
         const state = this.getMatchingState(id);
         let delay: number = DEFAULT_DELAY;
 
-        if (state && state.mocks[name] !== undefined) {
+        if (state?.mocks[name] !== undefined) {
             delay = state.mocks[name].delay;
         }
         return delay;
@@ -219,7 +220,7 @@ export class State {
         const state = this.getMatchingState(id);
         let echo = DEFAULT_ECHO;
 
-        if (state && state.mocks[name] !== undefined) {
+        if (state?.mocks[name] !== undefined) {
             echo = state.mocks[name].echo;
         }
         return echo;
@@ -264,9 +265,14 @@ export class State {
 
     setProcessingOptions(config: ProcessingOptions) {
         this._processingOptions = config;
+        if (config.callbackOptions) this._callback = config.callbackOptions();
     }
 
     getProcessingOptions(): ProcessingOptions {
         return this._processingOptions;
+    }
+
+    getCallbackOptions() {
+        return this._callback;
     }
 }

@@ -25,8 +25,10 @@ export class SelectPresetHandler implements ApplicableHandler {
      * @param {Configuration} configuration The configuration.
      * @param {State} state The state.
      */
-    constructor(@inject('Configuration') private configuration: Configuration,
-                @inject('State') private state: State) {
+    constructor(
+@inject('Configuration') private configuration: Configuration,
+                @inject('State') private state: State
+    ) {
     }
 
     /** {@inheritDoc}. */

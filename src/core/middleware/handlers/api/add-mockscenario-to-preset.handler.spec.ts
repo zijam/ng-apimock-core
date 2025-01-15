@@ -112,9 +112,13 @@ describe('AddMockScenarioToPresetHandler', () => {
             });
 
             expect(debugFn).toHaveBeenCalledTimes(1);
-            expect(debugFn).toHaveBeenCalledWith(expect.stringContaining('No scenario found with name: [somescenario] in mock with name [valid]'));
+            expect(debugFn).toHaveBeenCalledWith(
+                expect.stringContaining('No scenario found with name: [somescenario] in mock with name [valid]')
+            );
             expect(response.writeHead).toHaveBeenCalledWith(409, HttpHeaders.CONTENT_TYPE_APPLICATION_JSON);
-            expect(response.end).toHaveBeenCalledWith(JSON.stringify({ message: 'No scenario found with name: [somescenario] in mock with name [valid]' }));
+            expect(response.end).toHaveBeenCalledWith(
+                JSON.stringify({ message: 'No scenario found with name: [somescenario] in mock with name [valid]' })
+            );
         });
         it('should add the mock to the preset if it doen not exist', () => {
             handler.addMockScenarioToPreset = jest.fn();
@@ -151,7 +155,7 @@ describe('AddMockScenarioToPresetHandler', () => {
             state.getProcessingOptions.mockReturnValue({
                 src: 'the/mocks/path',
                 patterns: {
-                    mocks: '**/*.somemock.json',
+                    mocks: ['**/*.somemock.json'],
                     presets: '**/*.somepreset.json'
                 }
             });
@@ -169,9 +173,11 @@ describe('AddMockScenarioToPresetHandler', () => {
                 },
                 variables: {}
             };
-            expect(outputJSONSync).toHaveBeenCalledWith(path.join('the/mocks/path', 'newpreset.somepreset.json'),
+            expect(outputJSONSync).toHaveBeenCalledWith(
+                path.join('the/mocks/path', 'newpreset.somepreset.json'),
                 expectedContent,
-                { spaces: 2 });
+                { spaces: 2 }
+            );
         });
     });
 

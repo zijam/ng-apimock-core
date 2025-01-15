@@ -63,33 +63,35 @@ export class Middleware {
      * @param {State} apimockState The apimock state.
      * @param {UpdateMocksHandler} updateMocksHandler The update mocks handler.
      */
-    constructor(@inject('Configuration') private configuration: Configuration,
-                @inject('JsonBodyParser') private jsonBodyParser: NextHandleFunction,
-                @inject('UrlEncodedBodyParser') private urlEncodedBodyParser: NextHandleFunction,
-                @inject('TextBodyParser') private textBodyParser: NextHandleFunction,
-                @inject('State') private apimockState: State,
-                @inject('AddMockScenarioToPresetHandler') private addMockToPresetHandler: AddMockScenarioToPresetHandler,
-                @inject('CreateMockHandler') private createMockHandler: CreateMockHandler,
-                @inject('CreatePresetHandler') private createPresetHandler: CreatePresetHandler,
-                @inject('DefaultsHandler') private defaultsHandler: DefaultsHandler,
-                @inject('DeleteVariableHandler') private deleteVariableHandler: DeleteVariableHandler,
-                @inject('EchoRequestHandler') private echoRequestHandler: EchoRequestHandler,
-                @inject('GetMocksHandler') private getMocksHandler: GetMocksHandler,
-                @inject('GetPresetsHandler') private getPresetsHandler: GetPresetsHandler,
-                @inject('GetRecordingsHandler') private getRecordingsHandler: GetRecordingsHandler,
-                @inject('GetRecordedResponseHandler') private getRecordedResponseHandler: GetRecordedResponseHandler,
-                @inject('GetVariablesHandler') private getVariablesHandler: GetVariablesHandler,
-                @inject('HealthHandler') private healthHandler: HealthHandler,
-                @inject('InformationHandler') private informationHandler: InformationHandler,
-                @inject('InitHandler') private initHandler: InitHandler,
-                @inject('MockRequestHandler') private mockRequestHandler: MockRequestHandler,
-                @inject('PassThroughsHandler') private passThroughsHandler: PassThroughsHandler,
-                @inject('RecordHandler') private recordHandler: RecordHandler,
-                @inject('RecordResponseHandler') private recordResponseHandler: RecordResponseHandler,
-                @inject('SelectPresetHandler') private selectPresetHandler: SelectPresetHandler,
-                @inject('SetVariableHandler') private setVariableHandler: SetVariableHandler,
-                @inject('StateHandler') private stateHandler: StateHandler,
-                @inject('UpdateMocksHandler') private updateMocksHandler: UpdateMocksHandler,) {
+    constructor(
+@inject('Configuration') private readonly configuration: Configuration,
+                @inject('JsonBodyParser') private readonly jsonBodyParser: NextHandleFunction,
+                @inject('UrlEncodedBodyParser') private readonly urlEncodedBodyParser: NextHandleFunction,
+                @inject('TextBodyParser') private readonly textBodyParser: NextHandleFunction,
+                @inject('State') private readonly apimockState: State,
+                @inject('AddMockScenarioToPresetHandler') private readonly addMockToPresetHandler: AddMockScenarioToPresetHandler,
+                @inject('CreateMockHandler') private readonly createMockHandler: CreateMockHandler,
+                @inject('CreatePresetHandler') private readonly createPresetHandler: CreatePresetHandler,
+                @inject('DefaultsHandler') private readonly defaultsHandler: DefaultsHandler,
+                @inject('DeleteVariableHandler') private readonly deleteVariableHandler: DeleteVariableHandler,
+                @inject('EchoRequestHandler') private readonly echoRequestHandler: EchoRequestHandler,
+                @inject('GetMocksHandler') private readonly getMocksHandler: GetMocksHandler,
+                @inject('GetPresetsHandler') private readonly getPresetsHandler: GetPresetsHandler,
+                @inject('GetRecordingsHandler') private readonly getRecordingsHandler: GetRecordingsHandler,
+                @inject('GetRecordedResponseHandler') private readonly getRecordedResponseHandler: GetRecordedResponseHandler,
+                @inject('GetVariablesHandler') private readonly getVariablesHandler: GetVariablesHandler,
+                @inject('HealthHandler') private readonly healthHandler: HealthHandler,
+                @inject('InformationHandler') private readonly informationHandler: InformationHandler,
+                @inject('InitHandler') private readonly initHandler: InitHandler,
+                @inject('MockRequestHandler') private readonly mockRequestHandler: MockRequestHandler,
+                @inject('PassThroughsHandler') private readonly passThroughsHandler: PassThroughsHandler,
+                @inject('RecordHandler') private readonly recordHandler: RecordHandler,
+                @inject('RecordResponseHandler') private readonly recordResponseHandler: RecordResponseHandler,
+                @inject('SelectPresetHandler') private readonly selectPresetHandler: SelectPresetHandler,
+                @inject('SetVariableHandler') private readonly setVariableHandler: SetVariableHandler,
+                @inject('StateHandler') private readonly stateHandler: StateHandler,
+                @inject('UpdateMocksHandler') private readonly updateMocksHandler: UpdateMocksHandler,
+    ) {
         this.handlers = [
             addMockToPresetHandler,
             createMockHandler,
@@ -113,7 +115,7 @@ export class Middleware {
         ];
     }
 
-    private handlers: ApplicableHandler[];
+    private readonly handlers: ApplicableHandler[];
 
     /**
      * Apimock Middleware.
@@ -197,7 +199,7 @@ export class Middleware {
      * @return {string} identifier The identifier.
      */
     getApimockIdFromCookie(headers: http.IncomingHttpHeaders): string {
-        return headers.cookie && (headers.cookie as string)
+        return headers.cookie
             .split(';')
             .map((cookie) => {
                 const parts = cookie.split('=');

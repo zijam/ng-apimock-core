@@ -19,7 +19,7 @@ export class GetRecordedResponseHandler implements ApplicableHandler {
      * Constructor.
      * @param {Configuration} configuration The configuration.
      */
-    constructor(@inject('Configuration') private configuration: Configuration) {
+    constructor(@inject('Configuration') private readonly configuration: Configuration) {
     }
 
     /** {@inheritDoc}. */

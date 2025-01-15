@@ -25,15 +25,23 @@ export class RecordResponseHandler implements Handler {
      * @param {Configuration} configuration The configuration.
      * @param {State} state The state.
      */
-    constructor(@inject('Configuration') private configuration: Configuration,
-                @inject('State') private state: State) {
+    constructor(
+@inject('Configuration') private readonly configuration: Configuration,
+                @inject('State') private readonly state: State
+    ) {
     }
 
     /** {@inheritDoc}. */
-    async handle(request: http.IncomingMessage, response: http.ServerResponse, next: Function, params: { id: string, mock: Mock, body: any }): Promise<any> {
+    async handle(
+        request: http.IncomingMessage,
+        response: http.ServerResponse,
+        next: Function,
+        params: { id: string, mock: Mock, body: any }
+    ): Promise<any> {
         const { method } = request;
         const { headers } = request;
-        const ipAddress = this.configuration.middleware.ipAddress !== undefined ? headers.host.replace('localhost', this.configuration.middleware.ipAddress) : headers.host;
+        const ipAddress = this.configuration.middleware.ipAddress !== undefined
+            ? headers.host.replace('localhost', this.configuration.middleware.ipAddress) : headers.host;
 
         headers.record = 'true';
 
@@ -101,8 +109,13 @@ export class RecordResponseHandler implements Handler {
 
         if (this.APPLICABLE_MIMETYPES.indexOf(contentType) === -1) {
             const destination = `${uuid.v4()}.${contentType.substring(contentType.indexOf('/') + 1)}`;
-            fs.writeFileSync(path.join(os.tmpdir(), destination), Buffer.from((recording.response.data as any).toString(this.RESPONSE_ENCODING), this.RESPONSE_ENCODING as any));
-            recording.response.data = JSON.stringify({ apimockFileLocation: `${this.configuration.middleware.basePath}/recordings/${destination}` });
+            fs.writeFileSync(path.join(
+                os.tmpdir(),
+                destination
+            ), Buffer.from((recording.response.data as any).toString(this.RESPONSE_ENCODING), this.RESPONSE_ENCODING as any));
+            recording.response.data = JSON.stringify(
+                { apimockFileLocation: `${this.configuration.middleware.basePath}/recordings/${destination}` }
+            );
         } else {
             recording.response.data = recording.response.data.toString();
         }

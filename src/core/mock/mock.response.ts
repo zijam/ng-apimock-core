@@ -1,3 +1,7 @@
+import { IncomingMessage } from 'http';
+
+import { HTTPError } from '../processor/processing.options';
+
 import { MockResponseThenClause } from './mock.response.then.clause';
 
 /** Mock response. */
@@ -8,6 +12,8 @@ export interface MockResponse {
     data?: {} | [{}];
     // response as file
     file?: string;
+    // response callback
+    callback?: (mock?: object, request?: IncomingMessage) => {} | [{}] | HTTPError;
     // response headers
     headers?: { [key: string]: string };
     // response status text
