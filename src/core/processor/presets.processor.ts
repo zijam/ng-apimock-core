@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import * as debug from 'debug';
+import { debug } from 'debug';
 import * as glob from 'glob';
 import { inject, injectable } from 'inversify';
 
@@ -28,7 +28,7 @@ export class PresetsProcessor {
      * - processing the globs and processing all available presets.
      * @param {ProcessingOptions} options The processing options.
      */
-    process(options: ProcessingOptions): void {
+    async process(options: ProcessingOptions): Promise<void> {
         if (options.watches?.presets) {
             // trigger deletion of files matching preset watches pattern from cache
             glob.sync(options.watches.presets, {
@@ -43,23 +43,25 @@ export class PresetsProcessor {
         let counter = 0;
         const pattern = options.patterns.presets;
 
-        glob.sync(pattern, {
-            cwd: options.src,
-            root: '/'
-        }).forEach((file) => {
-            const presetPath = path.join(options.src, file);
-            const preset = this.fileLoader.loadFile(presetPath);
-            const match = this.state.presets.find((_preset: Preset) => _preset.name === preset.name);
-            const index = this.state.presets.indexOf(match);
+        await Promise.all(
+            glob.sync(pattern, {
+                cwd: options.src,
+                root: '/'
+            }).map(async (file) => {
+                const presetPath = path.join(options.src, file);
+                const preset = await this.fileLoader.loadFile(presetPath);
+                const match = this.state.presets.find((_preset: Preset) => _preset.name === preset.name);
+                const index = this.state.presets.indexOf(match);
 
-            if (index > -1) { // exists so update preset
-                log(`Preset with identifier '${preset.name}' already exists. Overwriting existing preset.`);
-                this.state.presets[index] = preset;
-            } else { // add preset
-                this.state.presets.push(preset);
-                counter++;
-            }
-        });
+                if (index > -1) { // exists so update preset
+                    log(`Preset with identifier '${preset.name}' already exists. Overwriting existing preset.`);
+                    this.state.presets[index] = preset;
+                } else { // add preset
+                    this.state.presets.push(preset);
+                    counter++;
+                }
+            })
+        );
 
         log(`Processed ${counter} unique presets.`);
     }

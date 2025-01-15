@@ -15,8 +15,8 @@ describe('FileLoader', () => {
         fileLoader = container.get<FileLoader>('FileLoader');
     });
     describe('load', () => {
-        it('loads the file from the filepath', () => {
-            const packageJson = fileLoader.loadFile('package.json');
+        it('loads the file from the filepath', async () => {
+            const packageJson = await fileLoader.loadFile('package.json');
             expect(packageJson.name).toBe('@ng-apimock/core');
         });
     });

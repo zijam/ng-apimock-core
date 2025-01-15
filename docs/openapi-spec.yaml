@@ -1,8 +1,11 @@
 openapi: 3.0.2
 info:
-  title: @ng-apimock/core api
+  title: "@ng-apimock/core api"
   description: API for @ng-apimock/core
   version: 1.0.0
+  license: 
+    name: "MIT"
+    url: https://choosealicense.com/licenses/mit/
   contact:
     name: Mischa Dasberg
     email: mischa@dasberg.nl

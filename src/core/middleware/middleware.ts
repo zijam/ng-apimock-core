@@ -199,7 +199,7 @@ export class Middleware {
      * @return {string} identifier The identifier.
      */
     getApimockIdFromCookie(headers: http.IncomingHttpHeaders): string {
-        return headers.cookie
+        return (headers.cookie ?? '')
             .split(';')
             .map((cookie) => {
                 const parts = cookie.split('=');

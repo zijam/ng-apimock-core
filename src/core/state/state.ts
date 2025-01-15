@@ -30,8 +30,11 @@ export class State {
     readonly _global: GlobalState;
 
     readonly _sessions: SessionState[];
+
     private _processingOptions: ProcessingOptions;
+
     private _callback: object | HTTPError;
+
     /** Constructor. */
     constructor() {
         this._mocks = [];

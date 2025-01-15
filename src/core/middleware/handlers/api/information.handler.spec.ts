@@ -42,11 +42,11 @@ describe('InformationHandler', () => {
                 writeHead: jest.fn()
             } as unknown as http.ServerResponse;
 
-            instanceHolder.getInformation.mockReturnValue({ the: 'information' });
+            instanceHolder.getInformation.mockReturnValue(Promise.resolve({ the: 'information' }));
         });
 
-        it('ends the response', () => {
-            handler.handle(request as any, response as any, nextFn, { id: 'apimockId' });
+        it('ends the response', async () => {
+            await handler.handle(request as any, response as any, nextFn, { id: 'apimockId' });
 
             expect(debugFn).toHaveBeenCalledTimes(1);
             expect(debugFn).toHaveBeenCalledWith(expect.stringContaining('Information'));

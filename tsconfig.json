@@ -5,12 +5,13 @@
     "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "moduleResolution": "node",
     "lib": [
       "es6",
       "es2015",
       "dom"
     ],
-    "module": "commonjs",
+    "module": "ESNext",
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,

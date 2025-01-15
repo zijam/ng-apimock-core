@@ -17,15 +17,15 @@ export class InstanceHolder {
      * @param {State} state The state
      */
     constructor(
-@inject('Configuration') private configuration: Configuration,
-                @inject('FileLoader') private fileLoader: FileLoader,
-                @inject('State') private state: State
+@inject('Configuration') private readonly configuration: Configuration,
+                @inject('FileLoader') private readonly fileLoader: FileLoader,
+                @inject('State') private readonly state: State
     ) {
     }
 
     /** Gets the information containing everything related to this running instance. */
-    getInformation(): any {
-        const packageJson = this.fileLoader.loadFile(path.join(__dirname, '..', 'package.json'));
+    async getInformation(): Promise<any> {
+        const packageJson = await this.fileLoader.loadFile(path.join(__dirname, '..', 'package.json'));
         return {
             build: {
                 artifact: packageJson.name,

@@ -53,17 +53,17 @@ describe('MocksProcessor', () => {
                 'mock/minimal-binary-request.mock.json',
                 'mock/full-request.mock.json',
                 'mock/duplicate-request.mock.json']);
-            loadFileFn.mockReturnValueOnce({
+            loadFileFn.mockReturnValueOnce(Promise.resolve({
                 name: 'minimal-json-request',
                 request: { url: 'minimal/json/url', method: 'GET' },
                 responses: { 'minimal-json-response': {} }
-            });
-            loadFileFn.mockReturnValueOnce({
+            }));
+            loadFileFn.mockReturnValueOnce(Promise.resolve({
                 name: 'minimal-binary-request',
                 request: { url: 'minimal/binary/url', method: 'GET' },
                 responses: { 'minimal-binary-response': { file: 'some.pdf' } }
-            });
-            loadFileFn.mockReturnValueOnce({
+            }));
+            loadFileFn.mockReturnValueOnce(Promise.resolve({
                 name: 'full-request',
                 isArray: true,
                 delay: 1000,
@@ -90,12 +90,12 @@ describe('MocksProcessor', () => {
                         default: false
                     }
                 }
-            });
-            loadFileFn.mockReturnValue({
+            }));
+            loadFileFn.mockReturnValue(Promise.resolve({
                 name: 'minimal-json-request',
                 request: { url: 'duplicate/url', method: 'GET' },
                 responses: { 'duplicate-response': {} }
-            });
+            }));
         });
 
         describe('by default', () => {

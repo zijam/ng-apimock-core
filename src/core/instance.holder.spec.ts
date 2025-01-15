@@ -41,15 +41,15 @@ describe('InstanceHolder', () => {
                 },
                 watch: true
             };
-            fileLoader.loadFile.mockReturnValue({
+            fileLoader.loadFile.mockReturnValue(Promise.resolve({
                 name: '@ng-apimock/core',
                 description: 'ng-apimock core module',
                 version: 'x.x.x'
-            });
+            }));
         });
 
-        it('gets the information', () => {
-            const information = holder.getInformation();
+        it('gets the information', async () => {
+            const information = await holder.getInformation();
 
             expect(information.build).toEqual({
                 artifact: '@ng-apimock/core',

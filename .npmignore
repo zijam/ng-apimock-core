@@ -33,4 +33,5 @@ docs
 # husky
 .husky
 
-
+# vscode
+.vscode

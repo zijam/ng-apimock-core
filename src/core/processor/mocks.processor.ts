@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import * as debug from 'debug';
+import debug from 'debug';
 import * as glob from 'glob';
 import { inject, injectable } from 'inversify';
 
@@ -33,7 +33,7 @@ export class MocksProcessor {
      * - processing the globs and processing all available mocks.
      * @param {ProcessingOptions} options The processing options.
      */
-    process(options: ProcessingOptions): void {
+    async process(options: ProcessingOptions): Promise<void> {
         if (options.watches?.mocks) {
             // trigger deletion of files matching mock watches pattern from cache
             glob.sync(options.watches.mocks, {
@@ -48,13 +48,13 @@ export class MocksProcessor {
         let counter = 0;
         const { mocks, ignore } = options.patterns;
 
-        glob.sync(mocks, {
+        await Promise.all(glob.sync(mocks, {
             cwd: options.src,
             root: '/',
             ignore
-        }).forEach((file) => {
+        }).map(async (file) => {
             const mockPath = path.join(options.src, file);
-            const mock = this.fileLoader.loadFile(mockPath);
+            const mock = await this.fileLoader.loadFile(mockPath);
             const match = this.state.mocks.find((_mock: Mock) => _mock.name === mock.name);
             const index = this.state.mocks.indexOf(match);
 
@@ -103,7 +103,7 @@ export class MocksProcessor {
 
             this.state.defaults[mock.name] = state;
             this.state.global.mocks[mock.name] = JSON.parse(JSON.stringify(state));
-        });
+        }));
 
         log(`Processed ${counter} unique mocks.`);
     }

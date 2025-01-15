@@ -25,11 +25,11 @@ export class InformationHandler implements ApplicableHandler {
     }
 
     /** {@inheritDoc}. */
-    handle(_request: http.IncomingMessage, response: http.ServerResponse, next: Function, _params: { id: string }): void {
+    async handle(_request: http.IncomingMessage, response: http.ServerResponse, next: Function, _params: { id: string }): Promise<void> {
         log('Information');
 
         response.writeHead(HttpStatusCode.OK, HttpHeaders.CONTENT_TYPE_APPLICATION_JSON);
-        response.end(JSON.stringify(this.instanceHolder.getInformation()));
+        response.end(JSON.stringify(await this.instanceHolder.getInformation()));
     }
 
     /** {@inheritDoc}. */
