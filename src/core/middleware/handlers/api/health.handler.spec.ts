@@ -2,7 +2,7 @@ import 'reflect-metadata';
 
 import * as http from 'http';
 
-import * as debug from 'debug';
+import debug from 'debug';
 import { Container } from 'inversify';
 
 import { InstanceHolder } from '../../../instance.holder';

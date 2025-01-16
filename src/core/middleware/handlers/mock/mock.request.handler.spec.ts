@@ -6,8 +6,7 @@ import { Container } from 'inversify';
 import { createSpyObj } from 'jest-createspyobj';
 
 import { Mock } from '../../../mock/mock';
-import { MockResponse } from '../../../mock/mock.response';
-import { HTTPError } from '../../../processor/processing.options';
+import { HTTPError, MockResponse } from '../../../mock/mock.response';
 import { IState } from '../../../state/Istate';
 import { MockState } from '../../../state/mock.state';
 import { State } from '../../../state/state';
@@ -412,7 +411,7 @@ describe('MockRequestHandler', () => {
 
             it('returns the response', () => {
                 interpolateCallbackFn.mockReturnValue(interpolatedText);
-                state.getCallbackOptions.mockReturnValue({});
+                state.getFixture.mockReturnValue({});
                 const chunk = (mockRequestHandler as any).getChunk(mockResponse, {}, params, false);
 
                 expect(chunk).toEqual(JSON.stringify(interpolatedText));

@@ -1,6 +1,6 @@
 import * as http from 'http';
 
-import * as debug from 'debug';
+import debug from 'debug';
 import { inject, injectable } from 'inversify';
 
 import { Configuration } from '../../../configuration';
@@ -19,8 +19,8 @@ export class PassThroughsHandler implements ApplicableHandler {
      * @param {State} state The state.
      */
     constructor(
-@inject('Configuration') private configuration: Configuration,
-                @inject('State') private state: State
+@inject('Configuration') private readonly configuration: Configuration,
+                @inject('State') private readonly state: State
     ) {
     }
 

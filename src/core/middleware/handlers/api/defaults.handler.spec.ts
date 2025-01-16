@@ -1,10 +1,9 @@
 import * as http from 'http';
 
-import * as debug from 'debug';
+import debug from 'debug';
 import { Container } from 'inversify';
 import { createSpyObj } from 'jest-createspyobj';
 
-import { Configuration } from '../../../configuration';
 import { State } from '../../../state/state';
 import { HttpHeaders, HttpStatusCode } from '../../http';
 

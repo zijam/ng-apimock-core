@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import * as debug from 'debug';
+import debug from 'debug';
 import * as glob from 'glob';
 import { Container } from 'inversify';
 import { createSpyObj } from 'jest-createspyobj';
@@ -99,8 +99,8 @@ describe('MocksProcessor', () => {
         });
 
         describe('by default', () => {
-            beforeEach(() => {
-                processor.process({ ...DefaultProcessingOptions, src: 'src' });
+            beforeEach(async () => {
+                await processor.process({ ...DefaultProcessingOptions, src: 'src' });
             });
 
             afterEach(() => {
@@ -185,9 +185,9 @@ describe('MocksProcessor', () => {
         });
 
         describe('with full processing options', () => {
-            beforeEach(() => {
+            beforeEach(async () => {
                 globSyncFn.mockReturnValue([]);
-                processor.process({ src: 'src', patterns: { mocks: '**/*.mymock.json' } });
+                await processor.process({ src: 'src', patterns: { mocks: '**/*.mymock.json' } });
             });
             it('processes each mock', () => {
                 expect(globSyncFn).toHaveBeenCalledWith('**/*.mymock.json', {
@@ -197,9 +197,9 @@ describe('MocksProcessor', () => {
         });
 
         describe('with mock watches set', () => {
-            beforeEach(() => {
+            beforeEach(async () => {
                 globSyncFn.mockReturnValue([]);
-                processor.process({ src: 'src', patterns: { mocks: '**/*.mymock.json' }, watches: { mocks: '**/*' } });
+                await processor.process({ src: 'src', patterns: { mocks: '**/*.mymock.json' }, watches: { mocks: '**/*' } });
             });
             it('processes each mock watch and mock pattern', () => {
                 expect(globSyncFn).toHaveBeenCalledWith('**/*', {

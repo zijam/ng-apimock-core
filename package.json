@@ -10,7 +10,7 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "scripts": {
-        "precompile": "rimraf dist",
+        "precompile": "rimraf dist package",
         "compile": "tsc",
         "lint": "eslint \"src/**/*.ts\"",
         "lint:fix": "npm run lint -- --fix",

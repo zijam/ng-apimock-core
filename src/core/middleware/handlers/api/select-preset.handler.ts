@@ -1,6 +1,6 @@
 import * as http from 'http';
 
-import * as debug from 'debug';
+import debug from 'debug';
 import { inject, injectable } from 'inversify';
 
 import { Configuration } from '../../../configuration';
@@ -17,8 +17,8 @@ export const log = debug('ng-apimock:handler-select-preset');
 /**  Select preset handler. */
 @injectable()
 export class SelectPresetHandler implements ApplicableHandler {
-    private DEFAULT_DELAY = 0;
-    private DEFAULT_ECHO = false;
+    private readonly DEFAULT_DELAY = 0;
+    private readonly DEFAULT_ECHO = false;
 
     /**
      * Constructor.
@@ -26,8 +26,8 @@ export class SelectPresetHandler implements ApplicableHandler {
      * @param {State} state The state.
      */
     constructor(
-@inject('Configuration') private configuration: Configuration,
-                @inject('State') private state: State
+@inject('Configuration') private readonly configuration: Configuration,
+                @inject('State') private readonly state: State
     ) {
     }
 

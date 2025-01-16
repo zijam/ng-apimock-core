@@ -6,6 +6,10 @@ import { injectable } from 'inversify';
 export class FileLoader {
     async loadFile(filePath: string): Promise<any> {
         const requireFilePath = path.relative(path.resolve(__dirname), path.resolve(filePath));
-        return import(requireFilePath);
+        const loadedFile = await import(requireFilePath);
+        if (loadedFile.default) {
+            return loadedFile.default;
+        }
+        return loadedFile;
     }
 }

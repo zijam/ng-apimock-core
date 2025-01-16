@@ -1,12 +1,5 @@
 import * as path from 'path';
 
-import * as http from '../middleware/http';
-
-export interface HTTPError extends Error {
-    status: typeof http.HttpStatusCode | number;
-    message: string;
-}
-
 export interface ProcessingOptions {
     src: string;
     patterns?: {
@@ -19,7 +12,7 @@ export interface ProcessingOptions {
         presets?: string;
     };
     watch?: boolean;
-    callbackOptions?: () => object | HTTPError
+    fixture?: () => {} | [{}]
 }
 
 export const DefaultProcessingOptions = {

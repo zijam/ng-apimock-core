@@ -1,7 +1,7 @@
 import * as http from 'http';
 import * as path from 'path';
 
-import * as debug from 'debug';
+import debug from 'debug';
 import * as fs from 'fs-extra';
 import { Container } from 'inversify';
 import { createSpyObj } from 'jest-createspyobj';

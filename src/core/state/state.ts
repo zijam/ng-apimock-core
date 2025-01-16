@@ -5,9 +5,9 @@ import { IncomingHttpHeaders } from 'http';
 import { injectable } from 'inversify';
 
 import { Mock } from '../mock/mock';
-import { MockResponse } from '../mock/mock.response';
+import { HTTPError, MockResponse } from '../mock/mock.response';
 import { Preset } from '../preset/preset';
-import { HTTPError, ProcessingOptions } from '../processor/processing.options';
+import { ProcessingOptions } from '../processor/processing.options';
 
 import { IState } from './Istate';
 import { GlobalState } from './global.state';
@@ -33,7 +33,7 @@ export class State {
 
     private _processingOptions: ProcessingOptions;
 
-    private _callback: object | HTTPError;
+    private _fixture: {} | [{}] | HTTPError;
 
     /** Constructor. */
     constructor() {
@@ -268,14 +268,14 @@ export class State {
 
     setProcessingOptions(config: ProcessingOptions) {
         this._processingOptions = config;
-        if (config.callbackOptions) this._callback = config.callbackOptions();
+        if (config.fixture) this._fixture = config.fixture();
     }
 
     getProcessingOptions(): ProcessingOptions {
         return this._processingOptions;
     }
 
-    getCallbackOptions() {
-        return this._callback;
+    getFixture() {
+        return this._fixture;
     }
 }

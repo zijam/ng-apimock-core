@@ -1,8 +1,13 @@
 import { IncomingMessage } from 'node:http';
 
-import { HTTPError } from '../processor/processing.options';
+import * as http from '../middleware/http';
 
 import { MockResponseThenClause } from './mock.response.then.clause';
+
+export interface HTTPError extends Error {
+    status: typeof http.HttpStatusCode | number;
+    message: string;
+}
 
 /** Mock response. */
 export interface MockResponse{
@@ -13,8 +18,8 @@ export interface MockResponse{
     // response as file
     file?: string;
     // response callback
-    callback?: (mock: any, request: IncomingMessage) =>
-        object | [object] | HTTPError;
+    callback?: (fixture: any, request: IncomingMessage) =>
+        {} | [{}] | HTTPError;
     // response headers
     headers?: { [key: string]: string };
     // response status text

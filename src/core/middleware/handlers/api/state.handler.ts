@@ -19,8 +19,8 @@ export class StateHandler implements ApplicableHandler {
      * @param {State} state The state.
      */
     constructor(
-@inject('Configuration') private configuration: Configuration,
-                @inject('State') private state: State
+@inject('Configuration') private readonly configuration: Configuration,
+                @inject('State') private readonly state: State
     ) {
     }
 

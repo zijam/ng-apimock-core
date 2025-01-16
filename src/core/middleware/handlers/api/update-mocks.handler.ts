@@ -1,6 +1,6 @@
 import * as http from 'http';
 
-import * as debug from 'debug';
+import debug from 'debug';
 import { inject, injectable } from 'inversify';
 
 import { Configuration } from '../../../configuration';

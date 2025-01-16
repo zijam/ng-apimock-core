@@ -2,17 +2,16 @@ import * as http from 'http';
 import * as path from 'path';
 import * as url from 'url';
 
-import * as debug from 'debug';
+import debug from 'debug';
 import * as fs from 'fs-extra';
 import { inject, injectable } from 'inversify';
 
 import { Mock } from '../../../mock/mock';
-import { MockResponse } from '../../../mock/mock.response';
+import { HTTPError, MockResponse } from '../../../mock/mock.response';
 import {
     MockResponseThenClause,
     MockResponseThenClauseCriteria,
 } from '../../../mock/mock.response.then.clause';
-import { HTTPError } from '../../../processor/processing.options';
 import { IState } from '../../../state/Istate';
 import { MockState } from '../../../state/mock.state';
 import { State } from '../../../state/state';
@@ -104,7 +103,7 @@ export class MockRequestHandler implements Handler {
             }
         } else if (this.isCallbackReponse(_response)) {
             const _variables = this.state.getVariables(params.id);
-            const data = _response.callback(this.state.getCallbackOptions(), request);
+            const data = _response.callback(this.state.getFixture(), request);
 
             if (this.instanceOfHttpError(data)) {
                 throw data;

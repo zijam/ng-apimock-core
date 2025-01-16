@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import * as debug from 'debug';
+import debug from 'debug';
 import * as glob from 'glob';
 import { Container } from 'inversify';
 import { createSpyObj } from 'jest-createspyobj';

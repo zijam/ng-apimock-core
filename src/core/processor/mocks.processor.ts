@@ -54,7 +54,7 @@ export class MocksProcessor {
             ignore
         }).map(async (file) => {
             const mockPath = path.join(options.src, file);
-            const mock = await this.fileLoader.loadFile(mockPath);
+            const mock = await this.fileLoader.loadFile(mockPath) as Mock;
             const match = this.state.mocks.find((_mock: Mock) => _mock.name === mock.name);
             const index = this.state.mocks.indexOf(match);
 

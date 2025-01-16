@@ -34,11 +34,11 @@ export class Processor {
      * - processing all the available presets.
      * @param {ProcessingOptions} options The processing options.
      */
-    process(options: ProcessingOptions): void {
+    async process(options: ProcessingOptions): Promise<void> {
         const opts = this.getMergedOptions(options);
         this.state.setProcessingOptions(opts);
-        this.mocksProcessor.process(opts);
-        this.presetsProcessor.process(opts);
+        await this.mocksProcessor.process(opts);
+        await this.presetsProcessor.process(opts);
 
         fs.ensureDirSync(GeneratedProcessingOptions.src);
         this.presetsProcessor.process(GeneratedProcessingOptions);
@@ -51,7 +51,7 @@ export class Processor {
                 ignoreInitial: true,
                 usePolling: true,
                 interval: 2000
-            }).on('all', () => this.mocksProcessor.process(opts));
+            }).on('all', async () => this.mocksProcessor.process(opts));
             chokidar.watch(`${opts.src}/${opts.watches?.presets || opts.patterns.presets}`, {
                 ignoreInitial: true,
                 usePolling: true,
